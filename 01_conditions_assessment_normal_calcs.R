@@ -1,5 +1,7 @@
 # assessing 'normal' conditions and deviations from normal in known drougth years.
 
+#Test typing 
+
 library(ggplot2)
 library(lubridate)
 library(nlme)
