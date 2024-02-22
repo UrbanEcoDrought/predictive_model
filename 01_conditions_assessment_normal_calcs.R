@@ -10,7 +10,7 @@ Sys.setenv(GOOGLE_DRIVE = "G:/Shared drives/Urban Ecological Drought")
 google.drive <- Sys.getenv("GOOGLE_DRIVE")
 
 
-path.figs <- file.path(google.drive, "data/exploratory figures/daily models")
+path.figs <- file.path(google.drive, "data/exploratory figures/")
 if(!dir.exists(path.figs)) dir.create(path.figs)
 
 ndvi.all <- readRDS(file.path(google.drive, "data/r_files/processed_files/landsat_ndvi_all.RDS"))
@@ -111,21 +111,56 @@ ggplot(data=ndviMet2[ndviMet2$type %in% "urban-medium",]) +
 
 # plotting NDVI obervatsions vs modeled normal for the lowest SPEI periods
 # SPEI14d
-ggplot() + facet_wrap(month~., scales="free_x") +
-  geom_violin(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) & ndviMet2$spei.14d.bins %in% 3 & ndviMet2$month %in% c(3:10) & ndviMet2$type %in% "urban-medium",], aes(x=month-0.5, y=ndvi), fill="black") +
-  geom_violin(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) & ndviMet2$spei.14d.bins %in% 1 & ndviMet2$type=="urban-medium" & ndviMet2$month %in% c(3:10),], aes(x=month+0.5, y=ndvi), fill="orange2") +
-  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2005& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi),col="red4", size=2)+
-  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2012& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi),col="red2", pch=17, size = 2)+
+plot.spei14 <- ggplot() + facet_wrap(month~., scales="free_x") +
+  geom_violin(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) & ndviMet2$spei.14d.bins %in% 3 & ndviMet2$month %in% c(3:10) & ndviMet2$type %in% "urban-medium",], aes(x=month-0.5, y=ndvi, fill= "All Conditions")) +
+  geom_violin(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) & ndviMet2$spei.14d.bins %in% 1 & ndviMet2$type=="urban-medium" & ndviMet2$month %in% c(3:10),], aes(x=month+0.5, y=ndvi, fill = "Driest Conditions")) +
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2005& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col = "2005"), size=2)+
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.14d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2012& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col = "2012"), pch=17, size = 2)+
+  scale_fill_manual(values = c("All Conditions" = "black", "Driest Conditions"="orange2"))+
+  scale_color_manual(values = c("2005" = "tan2", "2012" = "red3"))+
   labs(x="Month", y="NDVI Value", title="Lowest SPEI14 compared to normal with 2005 & 2012")+
   theme_bw()
 
 # SPEI90d
-ggplot() + facet_wrap(month~., scales="free_x") +
-  geom_violin(data = ndviMet2[ndviMet2$month %in% c(3:10) & ndviMet2$type %in% "urban-medium",], aes(x=month-0.5, y=ndvi.normal), fill="black") +
-  geom_violin(data = ndviMet2[!is.na(ndviMet2$spei.90d.bins) & ndviMet2$spei.90d.bins %in% 1 & ndviMet2$type=="urban-medium" & ndviMet2$month %in% c(3:10),], aes(x=month+0.5, y=ndvi), fill="orange2") +
-  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.90d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2005& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi),col="red4", size=2)+
-  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.90d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2012& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi),col="red2", pch=17, size = 2)+
+plot.spei90 <- ggplot() + facet_wrap(month~., scales="free_x") +
+  geom_violin(data = ndviMet2[ndviMet2$month %in% c(3:10) & ndviMet2$type %in% "urban-medium",], aes(x=month-0.5, y=ndvi, fill= "All Conditions")) +
+  geom_violin(data = ndviMet2[!is.na(ndviMet2$spei.90d.bins) & ndviMet2$spei.90d.bins %in% 1 & ndviMet2$type=="urban-medium" & ndviMet2$month %in% c(3:10),], aes(x=month+0.5, y=ndvi, fill = "Driest Conditions")) +
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.90d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2005& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col = "2005"), size=2)+
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spei.90d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2012& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col="2012"), pch=17, size = 2)+
   labs(x="Month", y="NDVI Value", title="Lowest SPEI90 compared to normal with 2005 & 2012") +
+  scale_fill_manual(values = c("All Conditions" = "black", "Driest Conditions"="orange2"))+
+  scale_color_manual(values = c("2005" = "tan2", "2012" = "red3"))+
   theme_bw()
 
 
+
+# SPI14d
+plot.spi14 <- ggplot() + facet_wrap(month~., scales="free_x") +
+  geom_violin(data = ndviMet2[!is.na(ndviMet2$spi.14d.bins) & ndviMet2$spi.14d.bins %in% 3 & ndviMet2$month %in% c(3:10) & ndviMet2$type %in% "urban-medium",], aes(x=month-0.5, y=ndvi, fill= "All Conditions")) +
+  geom_violin(data = ndviMet2[!is.na(ndviMet2$spi.14d.bins) & ndviMet2$spi.14d.bins %in% 1 & ndviMet2$type=="urban-medium" & ndviMet2$month %in% c(3:10),], aes(x=month+0.5, y=ndvi, fill = "Driest Conditions")) +
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spi.14d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2005& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col = "2005"), size=2)+
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spi.14d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2012& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col = "2012"), pch=17, size = 2)+
+  scale_fill_manual(values = c("All Conditions" = "black", "Driest Conditions"="orange2"))+
+  scale_color_manual(values = c("2005" = "tan2", "2012" = "red3"))+
+  labs(x="Month", y="NDVI Value", title="Lowest SPI14 compared to normal with 2005 & 2012")+
+  theme_bw()
+
+# SPI90d
+plot.spi90 <- ggplot() + facet_wrap(month~., scales="free_x") +
+  geom_violin(data = ndviMet2[ndviMet2$month %in% c(3:10) & ndviMet2$type %in% "urban-medium",], aes(x=month-0.5, y=ndvi, fill= "All Conditions")) +
+  geom_violin(data = ndviMet2[!is.na(ndviMet2$spi.90d.bins) & ndviMet2$spi.90d.bins %in% 1 & ndviMet2$type=="urban-medium" & ndviMet2$month %in% c(3:10),], aes(x=month+0.5, y=ndvi, fill = "Driest Conditions")) +
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spi.90d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2005& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col = "2005"), size=2)+
+  geom_point(data = ndviMet2[!is.na(ndviMet2$spi.90d.bins) &ndviMet2$type=="urban-medium" & ndviMet2$year==2012& ndviMet2$month %in% c(3:10),], aes(x=month, y=ndvi, col="2012"), pch=17, size = 2)+
+  labs(x="Month", y="NDVI Value", title="Lowest SPI90 compared to normal with 2005 & 2012") +
+  scale_fill_manual(values = c("All Conditions" = "black", "Driest Conditions"="orange2"))+
+  scale_color_manual(values = c("2005" = "tan2", "2012" = "red3"))+
+  theme_bw()
+
+library(cowplot)
+png(filename = file.path(path.figs, "14day_drought_violins.png"), height = 11, width = 15, unit = "in", res = 300)
+plot_grid(plot.spei14, plot.spi14, ncol=2)
+dev.off()
+
+png(filename = file.path(path.figs, "90day_drought_violins.png"), height = 11, width = 15, unit = "in", res = 300)
+plot_grid(plot.spei90, plot.spi90, ncol=2)
+dev.off()
